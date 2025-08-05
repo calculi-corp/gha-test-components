@@ -3,7 +3,7 @@ name: Blackduck scan
 on:
   push:
     branches:
-    - main
+    - "**"
 
 jobs:
   blackduck-codescan:
@@ -30,5 +30,6 @@ jobs:
         with:
           server-url: ${{ vars.BLACKDUCK_SERVER_URL }}
           api-token: ${{ secrets.BLACKDUCK_API_TOKEN }}
+          cloudbees-url: ${{ vars.CLOUDBEES_PREPROD_API_URL }}
 
 
