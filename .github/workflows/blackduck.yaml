@@ -26,7 +26,7 @@ jobs:
           echo "Step id is ${{ steps.internal.id }}"
 
       - name: Blackduck scan
-        uses: cloudbees-io-gha/black-duck-scan-publish@v2
+        uses: cloudbees-io-gha/black-duck-scan-publish@expose_output
         with:
           server-url: ${{ vars.BLACKDUCK_SERVER_URL }}
           api-token: ${{ secrets.BLACKDUCK_API_TOKEN }}
