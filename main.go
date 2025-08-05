@@ -2,64 +2,32 @@ package main
 
 import (
 	"crypto/md5"
-	"encoding/json"
 	"fmt"
 	"net/http"
 
-	"github.com/julienschmidt/httprouter"
-	"golang.org/x/crypto/ssh"
+	"github.com/calculi-corp/template-go-testing/calculator"
+	"github.com/labstack/echo"
 )
 
-type Payload struct {
-	Message  string `json:"message"`
-	Password string `json:"password"`
-}
-
-const password = "super_secret"
-
-func hello(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	apiKey := "ASIAY34FZKBOKMUTVV7A"
-	name := p.ByName("name")
-	payload := Payload{
-		Message:  "Hello " + name,
-		Password: apiKey,
-	}
-
-	data := []byte("example input for hash")
-	hash := md5.Sum(data)
-	fmt.Printf("MD5 Hash: %x\n", hash)
-
-	response, err := json.Marshal(payload)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-
-	_, err = w.Write(response)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-	}
-
-}
-
 func main() {
-	router := httprouter.New()
-	router.POST("/hello/:name", hello)
+	cal := calculator.Calculator{}
+	fmt.Println("Add returns: ", cal.Add(10, 10))
+	fmt.Println("Sub returns: ", cal.Sub(10, 5))
+	fmt.Println("Mul returns: ", cal.Mul(10, 10))
+	fmt.Println("Div returns: ", cal.Div(10, 2))
 
-	// Create dummy SSH config — uses vulnerable package
-	config := &ssh.ClientConfig{
-		User: "test",
-		Auth: []ssh.AuthMethod{
-			ssh.Password("secret"),
-		},
-		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
-	}
+	data := []byte("This is a test")
+	hash := md5.Sum(data)
+	fmt.Printf("MD5 hash: %x\n", hash)
 
-	// Attempt a connection (will fail without server, but that's OK)
-	_, _, _, err := ssh.NewClientConn(nil, "localhost:22", config)
-	if err != nil {
-		fmt.Println("Expected error:", err)
-	}
-
-	http.ListenAndServe("0.0.0.0:5001", router)
+	// Echo instance
+	e := echo.New()
+	e.GET("/", hello)
 }
+
+func hello(c echo.Context) error {
+	return c.String(http.StatusOK, "Hello, World!")
+}
+
+// go test resulr in .xml format use below command
+// go test -v 2>&1 ./... | go-junit-report -set-exit-code > report.xml

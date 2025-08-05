@@ -6,12 +6,17 @@ on:
     - "**"
 
 jobs:
-  blackduck-codescan:
+  blackduck-job:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read 
-      
+    outputs:
+      blackduck-job-output-critical: ${{ steps.blackduck-step.outputs.critical-count }}
+      blackduck-job-output-very-high: ${{ steps.blackduck-step.outputs.very-high-count }}
+      blackduck-job-output-high: ${{ steps.blackduck-step.outputs.high-count }}
+      blackduck-job-output-medium: ${{ steps.blackduck-step.outputs.medium-count }}
+      blackduck-job-output-low: ${{ steps.blackduck-step.outputs.low-count }}
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v3
@@ -25,11 +30,40 @@ jobs:
           echo "Job is $GITHUB_JOB"
           echo "Step id is ${{ steps.internal.id }}"
 
-      - name: Blackduck scan
+      - id: blackduck-step
+        name: Blackduck scan
         uses: cloudbees-io-gha/black-duck-scan-publish@expose_output
         with:
           server-url: ${{ vars.BLACKDUCK_SERVER_URL }}
           api-token: ${{ secrets.BLACKDUCK_API_TOKEN }}
           cloudbees-url: ${{ vars.CLOUDBEES_PREPROD_API_URL }}
 
+      - id: print-outputs-from-blackduck-step
+        name: Print outputs from upstream Blackduck step
+        shell: bash
+        run: |
+            #printing all outputs
+            echo "Outputs from upstream Blackduck step:"
+            echo "Critical Count: ${{steps.blackduck-step.outputs.critical-count}}"
+            echo "Very High Count: ${{steps.blackduck-step.outputs.very-high-count}}"
+            echo "High Count: ${{steps.blackduck-step.outputs.high-count}}"
+            echo "Medium Count: ${{steps.blackduck-step.outputs.medium-count}}"
+            echo "Low Count: ${{steps.blackduck-step.outputs.low-count}}"
+
+
+  Print-Outputs-From-Blackduck-Job:
+    runs-on: ubuntu-latest
+    needs: [blackduck-job]
+    steps:
+      - id: print-outputs-from-your-blackduck-job
+        name: Print outputs from upstream Blackduck job
+        shell: bash
+        run: |
+            #printing all outputs
+            echo "Outputs from upstream Blackduck job:"
+            echo "Critical Count: ${{needs.blackduck-job.outputs.blackduck-job-output-critical}}"
+            echo "Very High Count: ${{needs.blackduck-job.outputs.blackduck-job-output-very-high}}"
+            echo "High Count: ${{needs.blackduck-job.outputs.blackduck-job-output-high}}"
+            echo "Medium Count: ${{needs.blackduck-job.outputs.blackduck-job-output-medium}}"
+            echo "Low Count: ${{needs.blackduck-job.outputs.blackduck-job-output-low}}"
 
