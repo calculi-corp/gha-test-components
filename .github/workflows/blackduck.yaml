@@ -32,4 +32,3 @@ jobs:
           api-token: ${{ secrets.BLACKDUCK_API_TOKEN }}
 
 
-
