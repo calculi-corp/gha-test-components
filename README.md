@@ -1,2 +1,2 @@
 # gha-test-components
-Test repo for GHA actions - 1
+Test repo for GHA actions - 2
