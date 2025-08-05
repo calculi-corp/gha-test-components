@@ -66,3 +66,4 @@ jobs:
             echo "High Count: ${{needs.blackduck-job.outputs.blackduck-job-output-high}}"
             echo "Medium Count: ${{needs.blackduck-job.outputs.blackduck-job-output-medium}}"
             echo "Low Count: ${{needs.blackduck-job.outputs.blackduck-job-output-low}}"
+
