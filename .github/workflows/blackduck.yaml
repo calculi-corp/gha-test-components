@@ -25,6 +25,7 @@ jobs:
         shell: bash
         run: |
           echo "Ref name is $GITHUB_RUN_ID"
+          echo "OUTPUT folder name is $GITHUB_OUTPUT"
           echo "Source is ${{ github.server_url }}/${{ github.repository }}"
           echo "Subject is $GITHUB_WORKFLOW_REF|${{ github.run_id }}|${{ github.run_attempt }}|${{ github.run_number }}"
           echo "Job is $GITHUB_JOB"
