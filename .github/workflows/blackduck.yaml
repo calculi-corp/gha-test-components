@@ -32,7 +32,7 @@ jobs:
 
       - id: blackduck-step
         name: Blackduck scan
-        uses: cloudbees-io-gha/black-duck-scan-publish@expose_output
+        uses: cloudbees-io-gha/black-duck-scan-publish@main
         with:
           server-url: ${{ vars.BLACKDUCK_SERVER_URL }}
           api-token: ${{ secrets.BLACKDUCK_API_TOKEN }}
